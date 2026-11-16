@@ -3,7 +3,7 @@
 ## Description of the project
 
 ### Goal
-The project aims to train a model of binary classification which churns based on diverse type of the data of the customer's behaving, demography and financial status. With trained model the model is deploied as a web service aplication. Also a dockerfile is created for deployment od the model in clouds or other host 
+The project aims to train a model of binary classification which churns based on diverse type of the data of the customer's behaving, demography and financial status. With trained model the model is deployed as a web service aplication. Also a dockerfile is created for deployment od the model in clouds or other host. At the end the docker image was deployed to a AWS cloud with Elastic Beanstalk 
 
 ### Structure of the project
 1. Downloading the data 
@@ -22,6 +22,7 @@ Models have a tunned parameters and the results on validational set are compared
 The working model is checked with using gunicorn and separately with explicit using url with jupyter lab
 5. The project dependencies and venv are served by using dockerfile. 
 Working of the docker image is checked.
+6. Depying the docker image to the cloud (AWS) 
 ## Description of the dataset
 Used dataset is taken from Kaggle repository
 -[Dataset](https://www.kaggle.com/datasets/dhairyajeetsingh/ecommerce-customer-behavior-dataset)
@@ -215,3 +216,55 @@ And again start:
 ```bash
 sudo docker start churn-container
 ```
+## Descroptiom of deploying model to AWS with using docker container
+1. Having dockerimage we need to instal two things:
+- you need to have AWS CLI (command line)
+If you don't have it yet follow the instraction from official site [AWS_CLI_installation]
+(https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+The installation depends on you operational system.
+You can check the positive result of the installation with (Linux):
+```bash
+aws --version
+```
+You should get something similar to this:
+```bash
+aws-cli/2.40.3 Python/3.14.8 Linux/7.0.0-43-generic exe/x86_64.ubuntu.24
+```
+Be awere that you need to configure you machine with you AWS account
+Command for configuration (you need to have a keyes):
+```bash
+aws configure --profile eb-cli
+``` 
+After finishing the authentication you can use:
+```bash
+aws sts get-caller-identity --profile eb-cli
+```
+You should get UserID, Acount and Arn
+- Second thing is AWS Elastic Beanstalk Command Line Interface
+This cinterface can be installed locally only in you project. Using uv we can install it (in project folder) by using:
+```bash
+uv tool install awsebcli
+```
+You can check the version after installing(in you venv):
+```bash
+eb --version
+```
+You should see something like that:
+```bash
+EB CLI 3.27.7 (Python 3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0])
+``` 
+2. To initialize the Elastick Beanstalk app one should use command:
+```bash
+eb init -p docker -r eu-north-1 churn-serving
+```
+churning-serving is a name of application and eu-north-1 should be in agreement with you accout configuration
+Youn can verify that eb properly activates our application by docker:
+```bash
+eb local run --port 9696
+```
+It should activate our app and using another terminal and using command with data posted above (in Using of the service section) you should get proper prediction as in the other cases.
+To finish the deployment of our model to AWS cloud one needs to create enviroment which will be managing the docker containers and distributed it to other parts of a team 
+```bash
+eb create churn-serving-env
+```
+After proper realization you should get the IP of the server and see new environment in your Elastic Beanstalk Environments  
