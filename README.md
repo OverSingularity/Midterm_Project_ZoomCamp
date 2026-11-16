@@ -3,7 +3,7 @@
 ## Description of the project
 
 ### Goal
-The project aims to train a model of binary classification which churns based on diverse type of the data of the customer's behaving, demography and financial status. With trained model the model is deployed as a web service aplication. Also a dockerfile is created for deployment od the model in clouds or other host. At the end the docker image was deployed to a AWS cloud with Elastic Beanstalk 
+The project aims to train a model of binary classification when customer churns based on diverse type of the data of the customer's behaviour, demography and financial status. With trained model the model is deployed as a web service aplication. Also a dockerfile is created for deployment od the model in clouds or other host. At the end the docker image was deployed to a AWS cloud with Elastic Beanstalk. 
 
 ### Structure of the project
 1. Downloading the data 
@@ -13,16 +13,16 @@ The project aims to train a model of binary classification which churns based on
 - Checking correlations coefficients
 3. Training models and tuning:
 Three models will be trained 
-- Linear Regressor model
-- Random Forest model
-- XGB Tree model
-Models have a tunned parameters and the results on validational set are compared. It came out that XGB trees are provides best model. This model with best parameters is trained on full dataset and deployed.
+- Logistic Regressor model
+- Random Forest Classificator model
+- XGB Tree model for classification
+Models have a tuned hyperparameters and the results on validation set are compared. It came out that XGB tree provides best model. This model with best hyperparameters is trained on full dataset and deployed.
 4. The best model is saved as binary file 
 5. The saved model is served by application buit with Flask.
-The working model is checked with using gunicorn and separately with explicit using url with jupyter lab
+The working model is checked with using gunicorn and separately with explicit using url with jupyternotebook.
 5. The project dependencies and venv are served by using dockerfile. 
 Working of the docker image is checked.
-6. Depying the docker image to the cloud (AWS) 
+6. Deploying the docker image to the cloud (AWS) 
 ## Description of the dataset
 Used dataset is taken from Kaggle repository
 -[Dataset](https://www.kaggle.com/datasets/dhairyajeetsingh/ecommerce-customer-behavior-dataset)
@@ -51,25 +51,25 @@ Customer_Service_Calls, Product_Reviews_Written, Lifetime_Value
 
  The Churned variable is the target.
 
- FOr convenience and reproducibility of the results the splitted data are also in folder ECOMMERCE:
+ For convenience and reproducibility of the results the splitted data can be also taken from folder ECOMMERCE:
 - test_data.json (is used for final test)
 - train_data.json (is to first training of diffrent models )
 - val_data.json (used to checking the results of the training of the diffrents models and choosing best one)
-## Short description of the peculiar files
+## Short description of individual files
 1. Inspecting_data.ipynb
-File with feature engineering, filling values and saving test, val, train data used in the next notebook
+File with feature engineering, filling values and saving test, val, train datasets used in the next notebook
 2. Training_Models.ipynb
-Notebook with training 3 models for logistic regression. Includes also tuning parameters.
-3. train_final_model.py is python sript for training and saving final model. Training is done on merged data_val and data_train
+Notebook with training 3 models for logistic regression. Includes also tuning hyperparameters.
+3. train_final_model.py is python script for training and saving final model. Training is processed on merged data_val and data_train.
 
-4. pred_app.py is a script which codes deployment of the model into web service with flask and 
+4. pred_app.py is a script which codes deployment of the model into web service with flask
 
 5. final_model.bin - the binary file with saved final model used by pred_app.py
 
 6. POST_request.ipyn - is for checking that application works
 
 ## Description of enviromental setups 
-For the project manager uv pkg was used. 
+As a project manager uv pkg was used. 
 1. Installation of uv:
 - for Linux: 
 ```bash
@@ -78,17 +78,17 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 - for windows look at officail docs (https://docs.astral.sh/uv/#__tabbed_1_1)
 2. In docs you can check how to initaite project and how to add, remove, manage project enviroment
 
-3. Generally uv create to important files:
+3. Generally uv creates two important files:
 -pyproject.toml
 -uv.lock
-4. The nice feature of uv is that one doesn't need to enter indirectly to venv, but just using command uv ...
+4. The nice feature of uv is that one doesn't need to enter directly to venv, but just using command uv we can run all files. 
 - you can for example use jupyterlab by command
 ```bash
 uv run --with jupyter jupyter lab
 ```
 
 ## Using of the service
-1. First possiblity
+1. First possibility
 Using follow command in terminal you can run pred_app.py with uv 
 ```bash
 uv run -- flask --app pred_app.py run
